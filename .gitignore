@@ -1,0 +1,8 @@
+*.vscode
+
+/simu
+/synth
+
+transcript
+*.wlf
+*.ini
