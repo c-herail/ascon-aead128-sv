@@ -1,0 +1,47 @@
+package ascon_aead128_pkg;
+
+// constants for pc() operation
+const byte const_add[16] = '{
+    8'h3C, 8'h2D, 8'h1E, 8'h0F,
+    8'hF0, 8'hE1, 8'hD2, 8'hC3,
+    8'hB4, 8'hA5, 8'h96, 8'h87,
+    8'h78, 8'h69, 8'h5A, 8'h4B
+};
+
+// substitution box constants
+const logic [4:0] s_box[32] = '{
+    5'h04, 5'h0B, 5'h1F, 5'h14,
+    5'h1A, 5'h15, 5'h09, 5'h02,
+    5'h1B, 5'h05, 5'h08, 5'h12,
+    5'h1D, 5'h03, 5'h06, 5'h1C,
+    5'h1E, 5'h13, 5'h07, 5'h0E,
+    5'h00, 5'h0D, 5'h11, 5'h18,
+    5'h10, 5'h0C, 5'h01, 5'h19,
+    5'h16, 5'h0A, 5'h0F, 5'h17
+};
+
+// representation of Ascon 5x64 bits state
+typedef struct packed {
+    logic [63:0] s0;
+    logic [63:0] s1;
+    logic [63:0] s2;
+    logic [63:0] s3;
+    logic [63:0] s4;
+} ascon_state;
+
+typedef logic [3:0] round;
+
+// states for Ascon FSM
+typedef enum {
+    idle,
+    startup,
+    initialisation,
+    transition,
+    associated_data,
+    output_data,
+    finalisation,
+    output_tag,
+    output_end
+} ascon_fsm_state;
+
+endpackage
