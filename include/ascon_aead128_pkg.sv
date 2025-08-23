@@ -1,7 +1,10 @@
 package ascon_aead128_pkg;
 
+// constant initial value
+const logic [63:0] IV = 64'h00001000808c0001;
+
 // constants for pc() operation
-const byte const_add[16] = '{
+const logic [7:0] const_add[16] = '{
     8'h3C, 8'h2D, 8'h1E, 8'h0F,
     8'hF0, 8'hE1, 8'hD2, 8'hC3,
     8'hB4, 8'hA5, 8'h96, 8'h87,
@@ -43,5 +46,43 @@ typedef enum {
     output_tag,
     output_end
 } ascon_fsm_state;
+
+/** parameters for round_counter control **************************************/
+
+// round counter init signal values
+localparam logic DO_INIT = 1'b1;
+localparam logic NO_INIT = 1'b0;
+
+// round counter mode signal values
+localparam logic P12_MODE = 1'b1;
+localparam logic P8_MODE = 1'b0;
+
+// round counter incr signal values
+localparam logic DO_INCR = 1'b1;
+localparam logic NO_INCR = 1'b0;
+
+// round counter init counter values
+localparam round P12_INIT = 4'h4;
+localparam round P8_INIT = 4'h8;
+
+/** parameters for data_path control ******************************************/
+
+// sel_state values
+localparam logic SEL_INPUT_STATE = 1'b1;
+localparam logic SEL_LOOP_STATE = 1'b0;
+
+// sel_xor_data values
+localparam logic SEL_DATA_NO_XOR = 1'b0;
+localparam logic SEL_DATA_XOR = 1'b1;
+
+// sel_xor_key values
+localparam logic [1:0] SEL_KEY_NO_XOR = 2'd0;
+localparam logic [1:0] SEL_KEY_XOR_1 = 2'd1;
+localparam logic [1:0] SEL_KEY_0_RIGHT_PADDING = 2'd2;
+localparam logic [1:0] SEL_KEY_0_LEFT_PADDING = 2'd3;
+
+// sel_dout sel values
+localparam logic SEL_TAG = 1'b1;
+localparam logic SEL_DATA = 1'b0;
 
 endpackage
