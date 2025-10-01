@@ -21,19 +21,19 @@ module permutation (
     ascon_state ps_out_s;
 
     pc PC (
+        .rnd          (rnd),
         .current_state(current_state),
-        .rnd(rnd),
-        .next_state(pc_out_s)
+        .next_state   (pc_out_s)
     );
 
     ps PS (
         .current_state(pc_out_s),
-        .next_state(ps_out_s)
+        .next_state   (ps_out_s)
     );
 
     pl PL (
         .current_state(ps_out_s),
-        .next_state(next_state)
+        .next_state   (next_state)
     );
 
 endmodule : permutation
