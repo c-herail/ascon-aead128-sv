@@ -67,72 +67,72 @@ module data_path (
     mux21 #(.WIDTH(128))
     DIN_MUX (
         .sel(sel_din),
-        .a(ad),
-        .b(db),
-        .s(din_s)
+        .a  (ad),
+        .b  (db),
+        .s  (din_s)
     );
 
     mux21 #(.WIDTH($bits(ascon_state)))
     INPUT_MUX (
         .sel(sel_state),
-        .a(loop_s ^ end_ad),
-        .b(input_state_s),
-        .s(state_s)
+        .a  (loop_s ^ end_ad),
+        .b  (input_state_s),
+        .s  (state_s)
     );
 
     data_reg #(.WIDTH(128))
     KEY_REG (
-        .clk(clk),
+        .clk  (clk),
         .rst_n(rst_n),
-        .en(en_new_key),
-        .d(key),
-        .q(key_s)
+        .en   (en_new_key),
+        .d    (key),
+        .q    (key_s)
     );
 
     data_reg #(.WIDTH($bits(ascon_state)))
     STATE_REG (
-        .clk(clk),
+        .clk  (clk),
         .rst_n(rst_n),
-        .en(en_internal),
-        .d(state_s),
-        .q(internal_state_s)
+        .en   (en_internal),
+        .d    (state_s),
+        .q    (internal_state_s)
     );
 
     permutation PERMUTATION (
-        .rnd(rnd),
+        .rnd          (rnd),
         .current_state(internal_state_s),
-        .next_state(p_s)
+        .next_state   (p_s)
     );
 
     mux21 #(.WIDTH(128))
     DATA_XOR_MUX (
         .sel(sel_xor_data),
-        .a({p_s.s0, p_s.s1}),
-        .b({p_s.s0, p_s.s1} ^ din_s),
-        .s({loop_s.s0, loop_s.s1})
+        .a  ({p_s.s0, p_s.s1}),
+        .b  ({p_s.s0, p_s.s1} ^ din_s),
+        .s  ({loop_s.s0, loop_s.s1})
     );
 
     mux41 #(.WIDTH(192))
     KEY_XOR_MUX (
         .sel(sel_xor_key),
-        .a({p_s.s2, p_s.s3,  p_s.s4}),
-        .b({p_s.s2, p_s.s3,  p_s.s4} ^ key_s),
-        .c({p_s.s2, p_s.s3,  p_s.s4} ^ {key_s, 64'b0}),
-        .d(),
-        .s({loop_s.s2, loop_s.s3, loop_s.s4})
+        .a  ({p_s.s2, p_s.s3,  p_s.s4}),
+        .b  ({p_s.s2, p_s.s3,  p_s.s4} ^ key_s),
+        .c  ({p_s.s2, p_s.s3,  p_s.s4} ^ {key_s, 64'b0}),
+        .d  (),
+        .s  ({loop_s.s2, loop_s.s3, loop_s.s4})
     );
 
     always_comb begin : db_and_tag
-        db_s = {loop_s.s0, loop_s.s1};
-        tag_s = {loop_s.s3,  loop_s.s4};
+        db_s  = {loop_s.s0, loop_s.s1};
+        tag_s = {loop_s.s3, loop_s.s4};
     end
 
     mux21 #(.WIDTH(128))
     DOUT_MUX (
         .sel(sel_dout),
-        .a(db_s),
-        .b(tag_s),
-        .s(dout)
+        .a  (db_s),
+        .b  (tag_s),
+        .s  (dout)
     );
 
 endmodule : data_path
