@@ -83,6 +83,7 @@ localparam logic SEL_DATA_XOR    = 1'b1;
 localparam logic SEL_DATA_NO_XOR = 1'b0;
 
 // sel_xor_key values
+localparam logic [1:0] SEL_KEY_KEY    = 2'd3;
 localparam logic [1:0] SEL_KEY_0      = 2'd2;
 localparam logic [1:0] SEL_0_KEY      = 2'd1;
 localparam logic [1:0] SEL_KEY_NO_XOR = 2'd0;

@@ -118,7 +118,7 @@ module data_path (
         .a  ({p_s.s2, p_s.s3,  p_s.s4}),
         .b  ({p_s.s2, p_s.s3,  p_s.s4} ^ key_s),
         .c  ({p_s.s2, p_s.s3,  p_s.s4} ^ {key_s, 64'b0}),
-        .d  (),
+        .d  ({p_s.s2, p_s.s3,  p_s.s4} ^ {key_s, 64'b0} ^ key_s),
         .s  ({loop_s.s2, loop_s.s3, loop_s.s4})
     );
 

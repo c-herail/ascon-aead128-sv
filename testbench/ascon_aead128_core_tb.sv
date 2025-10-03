@@ -110,7 +110,6 @@ module ascon_aead128_core_tb ();
                 begin
                     @(posedge valid_db_out);
                     #1;
-                    $display("c : %h", dout);
                     if (dout != {c_arr[k].msb, c_arr[k].lsb}) begin
                         $display("Error : encryption failed (plaintext %d)", k);
                         $display("expected : %h", {c_arr[k].msb, c_arr[k].lsb});
@@ -216,8 +215,8 @@ module ascon_aead128_core_tb ();
         @(posedge clk);
         rst_n = 1'b1;
 
-        for (i = 1; i < 3; i++) begin
-            for (j = 1; j < 4; j++) begin
+        for (i = 0; i < 4; i++) begin
+            for (j = 1; j < 6; j++) begin
                 aead();
             end
         end;

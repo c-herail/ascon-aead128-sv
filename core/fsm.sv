@@ -52,6 +52,10 @@ module fsm (
     ascon_fsm_state current_state_s;
     ascon_fsm_state next_state_s;
 
+    logic end_ad_s;
+    logic ad_s;
+    logic db_s;
+
     // current_state seq
     always_ff @(posedge clk, negedge rst_n) begin
         if (!rst_n) begin
@@ -66,7 +70,7 @@ module fsm (
     always_comb begin
         // hold state by default
         next_state_s = current_state_s;
-        case(current_state_s)
+        case (current_state_s)
             idle : begin
                 if (start) begin
                     next_state_s = startup;
@@ -84,7 +88,10 @@ module fsm (
                 if (valid_ad)
                     next_state_s = xor_ad1;
                 else if (valid_db_in)
-                    next_state_s = xor_db1;
+                    if(!start)
+                        next_state_s = xor_finalisation;
+                    else
+                        next_state_s = xor_db1;
                 else begin
                     next_state_s = transition1;
                 end
@@ -178,7 +185,7 @@ module fsm (
         valid_db_out = 1'b0;
         valid_tag    = 1'b0;
 
-        case(current_state_s)
+        case (current_state_s)
             startup : begin
                 en_internal = 1'b1;
                 en_new_key  = 1'b1;
@@ -229,6 +236,7 @@ module fsm (
 
                 sel_din      = SEL_DB;
                 sel_xor_data = SEL_DATA_XOR;
+                sel_xor_key  = (ad_s)? SEL_KEY_NO_XOR : SEL_0_KEY;
 
                 end_ad = 1'b1;
 
@@ -252,7 +260,10 @@ module fsm (
 
                 sel_din      = SEL_DB;
                 sel_xor_data = SEL_DATA_XOR;
-                sel_xor_key  = SEL_KEY_0;
+                sel_xor_key  = (ad_s)? SEL_KEY_0 :
+                               (db_s)? SEL_KEY_0 : SEL_KEY_KEY;
+
+                end_ad = (end_ad_s)? 1'b0 : 1'b1;
 
                 valid_db_out = 1'b1;
             end
@@ -265,6 +276,28 @@ module fsm (
                 sel_dout    = SEL_TAG;
 
                 valid_tag = 1'b1;
+            end
+        endcase
+    end
+
+    always_ff @(posedge clk) begin
+        end_ad_s = end_ad_s;
+        ad_s = ad_s;
+        db_s = db_s;
+        case (current_state_s)
+            idle : begin
+                end_ad_s = 1'b0;
+                ad_s     = 1'b0;
+                db_s     = 1'b0;
+            end
+            xor_ad1,
+            xor_ad2 : begin
+                ad_s = 1'b1;
+            end
+            xor_db1,
+            xor_db2 : begin
+                end_ad_s = 1'b1;
+                db_s = 1'b1;
             end
         endcase
     end
