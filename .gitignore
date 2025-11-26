@@ -1,6 +1,6 @@
 *.vscode
 
-*/ascon_lib
+**/ascon_lib
 /doc
 
 transcript
