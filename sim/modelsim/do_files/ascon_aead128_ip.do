@@ -62,6 +62,7 @@ if {$gui_mode} {
     add wave -noupdate                    /ascon_aead128_ip_tb/DUT/core/FSM/current_state_s
 
     add wave -noupdate                    /ascon_aead128_ip_tb/DUT/din_status
+    add wave -noupdate                    /ascon_aead128_ip_tb/DUT/ad_status
 
     WaveRestoreCursors [list {Cursor 1} $RUNTIME 0]
     WaveRestoreZoom {0 ps} $RUNTIME

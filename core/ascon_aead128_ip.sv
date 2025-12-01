@@ -1,16 +1,15 @@
 /*******************************************************************************
  * module name : ascon_aead128_ip
  * version     : 1.0
- * description :
-
+ * description : Ascon-AEAD IP with AXI4-Lite interface.
  ******************************************************************************/
 
 import ascon_aead128_pkg::*;
 
 module ascon_aead128_ip (
-    input  logic   aclk,
-    input  logic   aresetn,
-    axi4_lite_if.s axi );
+    input logic        aclk,
+    input logic        aresetn,
+    axi4_lite_if.slave axi );
 
     localparam integer WTSRB_WIDTH = 4;
 
@@ -261,7 +260,7 @@ module ascon_aead128_ip (
         end
         else begin
             for (int i = 0; i < 4; i++) begin
-                if ((wr_index == DIN0 + i) && ((axi.awvalid) == 1'b1) && (axi.wvalid == 1'b1)) begin
+                if ((wr_index == DIN0 + i) && ((axi.awvalid & axi.wvalid) == 1'b1)) begin
                     din_status[i] <= 1'b1;
                 end
                 if ((wr_index == AD0 + i) && ((axi.awvalid & axi.wvalid) == 1'b1)) begin

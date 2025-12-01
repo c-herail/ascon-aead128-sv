@@ -36,7 +36,9 @@ module ascon_aead128_ip_tb ();
     axi4_lite_if #(
         .ADDRESS_WIDTH(7),
         .DATA_WIDTH(32)
-    ) axi();
+    ) axi (
+        .*
+    );
 
     ascon_aead128_ip DUT (
         .*
