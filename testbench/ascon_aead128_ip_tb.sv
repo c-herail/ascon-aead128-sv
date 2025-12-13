@@ -66,6 +66,10 @@ module ascon_aead128_ip_tb ();
         foreach(p_arr[k]) begin
             $display("p : %h", {p_arr[k].msb, p_arr[k].lsb});
         end
+        foreach(c_arr[k]) begin
+            $display("c : %h", {c_arr[k].msb, c_arr[k].lsb});
+        end
+        $display("tag : %h", {t.msb, t.lsb});
     endtask
 
     task perform_reset;
@@ -178,7 +182,6 @@ module ascon_aead128_ip_tb ();
         // set start and sel mode
         ctrl_reg = {30'b0, mode, 1'b1};
         write(CONTROL, ctrl_reg);
-        write(16, ctrl_reg);
     endtask
 
    task associated_data;
