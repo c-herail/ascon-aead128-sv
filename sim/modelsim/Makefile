@@ -2,7 +2,7 @@ RTL_DIR      = ../../core
 TB_DIR       = ../../testbench
 INC_DIR      = ../../include
 DO_FILES_DIR = ./do_files
-ASCON_C_DIR  = ../../../ascon-128-c-impl
+ASCON_C_DIR  = ../../../ascon-aead128-c
 DPI_C        = -sv_lib $(ASCON_C_DIR)/build/lib_sv_ascon_aead128
 
 # run simulation without GUI
