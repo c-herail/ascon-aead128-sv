@@ -63,7 +63,7 @@ ipx::package_project -root_dir $packaged_ip_dir \
 
 set_property display_name "Ascon-AEAD128 IP" [ipx::current_core]
 set_property vendor_display_name "cherail" [ipx::current_core]
-set_property company_url https://github.com/c-herail/ascon-128-sv-impl [ipx::current_core]
+set_property company_url https://github.com/c-herail/ascon-aead128-sv [ipx::current_core]
 set_property description "Ascon-AEAD128 IP with 32-bit AXI4-Lite interface" [ipx::current_core]
 
 ipx::create_xgui_files [ipx::current_core]
