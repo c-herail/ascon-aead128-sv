@@ -1,0 +1,272 @@
+= Ascon-AEAD128 IP documentation
+c-herail
+:url-repo: https://github.com/c-herail/ascon-aead128-sv.git
+
+== Ascon-AEAD128 implementation
+
+=== Introduction
+
+Although no warranties are provided, the IP is a hardware implementation of the Ascon-AEAD128 algorithm as defined by the NIST 800-232 draft: https://doi.org/10.6028/NIST.SP.800-232.ipd.
+
+=== Registers mapping
+
+[cols="1,1"]
+|===
+|Register name |Address
+
+|STATUS
+|BASE_ADDRESS + 0x64
+
+|TAG3
+|BASE_ADDRESS + 0x60
+
+|TAG2
+|BASE_ADDRESS + 0x5C
+
+|TAG1
+|BASE_ADDRESS + 0x58
+
+|TAG0
+|BASE_ADDRESS + 0x54
+
+|DOUT3
+|BASE_ADDRESS + 0x50
+
+|DOUT2
+|BASE_ADDRESS + 0x4C
+
+|DOUT1
+|BASE_ADDRESS + 0x48
+
+|DOUT0
+|BASE_ADDRESS + 0x44
+
+|CONTROL
+|BASE_ADDRESS + 0x40
+
+|AD3
+|BASE_ADDRESS + 0x3C
+
+|AD2
+|BASE_ADDRESS + 0x38
+
+|AD1
+|BASE_ADDRESS + 0x34
+
+|AD0
+|BASE_ADDRESS + 0x30
+
+|DIN3
+|BASE_ADDRESS + 0x2C
+
+|DIN2
+|BASE_ADDRESS + 0x28
+
+|DIN1
+|BASE_ADDRESS + 0x24
+
+|DIN0
+|BASE_ADDRESS + 0x20
+
+|KEY3
+|BASE_ADDRESS + 0x1C
+
+|KEY2
+|BASE_ADDRESS + 0x18
+
+|KEY1
+|BASE_ADDRESS + 0x14
+
+|KEY0
+|BASE_ADDRESS + 0x10
+
+|NONCE3
+|BASE_ADDRESS + 0xC
+
+|NONCE2
+|BASE_ADDRESS + 0x8
+
+|NONCE1
+|BASE_ADDRESS + 0x4
+
+|NONCE0
+|BASE_ADDRESS + 0x0
+|===
+
+== Ascon-AEAD128 functionnal description
+
+=== Introduction
+
+The Ascon-AEAD128 standard allows the user to perform an Advanced Encryption (AE) or an Advanced Decryption (AD) operation.
+
+=== Performing an encryption
+
+STEP 1::
+
+- set Key (KEYx) and Nonce (NONCEx)
+
+STEP 2::
+
+- set START bit and clear OP_MODE bit (CONTROL)
+
+STEP 3 (optional)::
+
+- wait for READY in STATUS register
+- set associated data blocks (ADx) one after the other if any
+
+STEP 4::
+
+- wait for READY (STATUS)
+- while current plaintext is not last plaintext block, set plaintext blocks (DINx) then read ciphertext value (DOUTx)
+- clear START bit (CONTROL)
+- set last plaintext block (DINx) then get last ciphertext value (DOUTx)
+- wait for AEAD_END (STATUS)
+- get Tag value (TAGx)
+
+=== Performing a decryption
+
+STEP 1::
+
+- set Key (KEYx) and Nonce (NONCEx)
+
+STEP 2::
+
+- set both START bit and OP_MODE bit (CONTROL)
+
+STEP 3 (optional)::
+
+- wait for READY in STATUS register
+- set associated data blocks (ADx) one after the other if any
+
+STEP 4::
+
+- wait for READY (STATUS)
+- while current ciphertext is not last ciphertext block, set ciphertext blocks (DINx) then read plaintext value (DOUTx)
+- clear START bit (CONTROL)
+- set last ciphertext block (DINx) then get last plaintext value (DOUTx)
+- wait for AEAD_END (STATUS)
+- get Tag value (TAGx)
+
+== Ascon-AEAD128 registers
+
+=== NONCEx
+
+[horizontal]
+Access:: READ-WRITE
+Restart value:: 0x0
+
+These registers are used to store the 128-bit Nonce value.
+This value should be set before starting any encryption or decryption.
+
+[horizontal]
+NONCE3:: Nonce[127:98]
+NONCE2:: Nonce[97:64]
+NONCE1:: Nonce[63:32]
+NONCE0:: Nonce[31:0]
+
+=== KEYx
+
+[horizontal]
+Access:: READ-WRITE
+Restart value:: 0x0
+
+These registers are used to store the 128-bit Key value.
+This value should be set before starting any encryption or decryption.
+
+CAUTION: Do not modify the Key in the middle of an encryption or decryption operation.
+
+[horizontal]
+KEY3:: Key[127:98]
+KEY2:: Key[97:64]
+KEY1:: Key[63:32]
+KEY0:: Key[31:0]
+
+=== DINx
+
+[horizontal]
+Access:: READ-WRITE
+Restart value:: 0x0
+
+These registers are used to store a 128-bit data block. If the operation is an encryption, the data is a plaintext, otherwise it is a ciphertext.
+
+NOTE: A data block is declared valid only when all four registers are written to.
+
+CAUTION: Before writing the last data block, clear the START bit in the CONTROL register.
+
+[horizontal]
+DIN3:: Plaintext[127:98] or Ciphertext[127:98]
+DIN2:: Plaintext[97:64] or Ciphertext[97:64]
+DIN1:: Plaintext[63:32] or Ciphertext[63:32]
+DIN0:: Plaintext[31:0] or Ciphertext[31:0]
+
+=== ADx
+
+[horizontal]
+Access:: READ-WRITE
+Restart value:: 0x0
+
+These registers are used to store a 128-bit associated data block.
+It is possible to perform an encryption/decryption operation without any associated data block.
+During an encryption/decryption operation, the sequence of associated data blocks is over when the first input data block is written to.
+
+NOTE: An associated data block is declared valid only when all four registers are written to.
+
+[horizontal]
+AD3:: Associated data[127:98]
+AD2:: Associated data[97:64]
+AD1:: Associated data[63:32]
+AD0:: Associated data[31:0]
+
+=== CONTROL
+
+[horizontal]
+Access:: READ-WRITE
+Restart value:: 0x0
+
+This register is used to control and set the current operation : encryption or decryption.
+
+Bit 31:3:: *RESERVED*
+Bit 1:: *OPMODE* operation mode, set to 1 to perform a decryption, set to 0 to perform an encryption
+Bit 0:: *START* set to 1 to start an operation then clear it before sending last data block
+
+=== DOUTx
+
+[horizontal]
+Access:: READ-ONLY
+Restart value:: 0x0
+
+These registers are used to store the resulting 128-bit data block. If the operation is an encryption, the data is a ciphertext, otherwise it is a plaintext.
+An output data block is valid when READY is set in the STATUS register and on the condition that a valid input data was written previously.
+
+[horizontal]
+DOUT3:: Plaintext[127:98] or Ciphertext[127:98]
+DOUT2:: Plaintext[97:64] or Ciphertext[97:64]
+DOUT1:: Plaintext[63:32] or Ciphertext[63:32]
+DOUT0:: Plaintext[31:0] or Ciphertext[31:0]
+
+=== TAGx
+
+[horizontal]
+Access:: READ-ONLY
+Restart value:: 0x0
+
+These registers are used to store the resulting 128-bit Tag.
+The Tag is valid when AEAD_END is set in the STATUS register.
+
+[horizontal]
+TAG3:: Tag[127:98]
+TAG2:: Tag[97:64]
+TAG1:: Tag[63:32]
+TAG0:: Tag[31:0]
+
+=== STATUS
+[horizontal]
+Access:: READ-ONLY
+Restart value:: 0x0
+
+This register stores information regarding the current encryption/decryption operation status.
+
+[horizontal]
+Bit 31:3:: *RESERVED*
+Bit 1:: *AEAD_END* signals end of current encryption/decryption operation
+Bit 0:: *READY* signals that a new associated data or data block can be sent

@@ -1,6 +1,5 @@
 RTL_DIR      = ../../core
 TB_DIR       = ../../testbench
-INC_DIR      = ../../include
 DO_FILES_DIR = ./do_files
 ASCON_C_DIR  = ../../../ascon-aead128-c
 DPI_C        = -sv_lib $(ASCON_C_DIR)/build/lib_sv_ascon_aead128
@@ -52,13 +51,13 @@ init:
 #========== INCLUDE ============================================================
 
 ascon_aead128_pkg: init
-	vlog -sv +acc -svinputport=net -work rtl_lib $(INC_DIR)/$@.sv
+	vlog -sv +acc -svinputport=net -work rtl_lib $(RTL_DIR)/$@.sv
 
 ascon_aead128_dpi_pkg: init
-	vlog -sv +acc -L rtl_lib -svinputport=net -work tb_lib $(INC_DIR)/$@.sv
+	vlog -sv +acc -L rtl_lib -svinputport=net -work tb_lib $(TB_DIR)/$@.sv
 
 ascon_aead128_tb_pkg: ascon_aead128_pkg ascon_aead128_dpi_pkg
-	vlog -sv +acc -L rtl_lib -svinputport=net -work tb_lib $(INC_DIR)/$@.sv
+	vlog -sv +acc -L rtl_lib -svinputport=net -work tb_lib $(TB_DIR)/$@.sv
 
 #========== CORE ===============================================================
 

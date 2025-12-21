@@ -172,7 +172,7 @@ module ascon_aead128_ip_tb ();
         do read(STATUS); while (rdata[0] != 1'b1);
     endtask
 
-    task wait_end_aead;
+    task wait_aead_end;
         do read(STATUS); while (rdata[1] != 1'b1);
     endtask
 
@@ -238,7 +238,7 @@ module ascon_aead128_ip_tb ();
 
     task finalisation(bit op_mode);
         // wait for valid_tag
-        wait_end_aead();
+        wait_aead_end();
         // read tag
         read_128(TAG0, rd_val);
         // check tag

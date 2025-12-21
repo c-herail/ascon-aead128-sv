@@ -11,19 +11,34 @@ In 2024, the National Institute of Standards and Technology (NIST) published an 
 
 ## About This Project
 
-This project implements the **Ascon-AEAD128** algorithm in hardware using **SystemVerilog**.
-It was originally developed as part of a school project to learn hardware design and FPGA development. A year later, the project was restarted from scratch, this time based on the official NIST draft specification. Several design and code improvements were made.
+This project implements the **Ascon-AEAD128** algorithm in hardware with an **AXI4-Lite interface** using **SystemVerilog**.
+It was originally developed as part of a school project to learn hardware design and FPGA development. A year later, the project was restarted from scratch, this time based on the official NIST draft specifications. Several design and code improvements were made; in addition, decryption is implemented and both operations support any number of associated data and data blocks.
 
 Please note that this project is provided **as-is**, without any warranty or guarantee of correctness or suitability for any specific purpose.
 
-Since this was initially a school project, similar Ascon hardware implementations may exist on GitHub.
-
 ## Project Structure
 
-- `core/` – All RTL modules that implement Ascon-AEAD128 (excluding system-level interfaces)
-- `include/` – Shared package(s) used by both core modules and testbenches
-- `testbench/` – Testbenches for all modules in the `core/` directory
-- `simu/` *(private)* – Scripts and ModelSim-related files used for simulation
+- `core/` – RTL modules that compose Ascon-AEAD128 IP
+- `testbench/` – Testbenches of the RTL modules
+- `sim/` – Scripts and ModelSim-related files used for simulation
+- `doc/` - User manual of Ascon-AEAD128 IP
+- `ip_packaging` - Scripts for FPGA implementation
+
+## How to
+
+**Run simulations**:
+- **prerequisites** : have Modelsim 32-bit free version installed and have [Ascon-AEAD128 C model](https://github.com/c-herail/ascon-aead128-c) installed
+- go to `sim/Modelsim`
+- type `make compile_dpi_lib` to compile C code into a shared library, change `ASCON_C_DIR` if necessary [this step is necessary only once]
+- type `make run_gui-<name of RTL module>` to run simulation with GUI
+- or `make run-<name of RTL module>` to run in batch mode
+- or `make run_all` to run all simulations one after the others in batch mode
+
+**Package IP for FPGA tools**:
+- **prerequisites** : have Vivado 2022.2 installed
+- go to `ip_packaging/vivado`
+- type `vivado -mode batch -soure package_ip.tcl`
+- or use Vivado GUI to execute the sript
 
 ## References
 

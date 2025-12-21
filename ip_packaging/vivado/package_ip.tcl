@@ -3,7 +3,6 @@ set script_name [file tail [file normalize [info script]]]
 set script_dir  [file dirname [file normalize [info script]]]
 set root_dir    [file dirname [file dirname $script_dir]]
 set core_dir    [file join $root_dir core]
-set include_dir [file join $root_dir include]
 
 set project_name    "ascon_aead128"
 set project_dir     [file join $script_dir ascon_aead128]
@@ -16,8 +15,6 @@ set ip_top ascon_aead128_ip
 ################################################################################
 ##### Get HDL files
 ################################################################################
-
-lappend hdl_files [file join $include_dir ascon_aead128_pkg.sv]
 
 foreach f [glob -nocomplain -directory $core_dir *] {
     if {[file isfile $f]} {
