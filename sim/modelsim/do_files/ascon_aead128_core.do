@@ -97,7 +97,6 @@ if {$gui_mode} {
     add wave -noupdate -radix hexadecimal $DATA_PATH/loop_s
     add wave -noupdate                    $DATA_PATH/sel_mode_s
     add wave -noupdate -radix hexadecimal $DATA_PATH/din_s
-    add wave -noupdate -radix hexadecimal $DATA_PATH/key_s
     add wave -noupdate -radix hexadecimal $DATA_PATH/db_s
     add wave -noupdate -radix hexadecimal $DATA_PATH/tag_s
 
