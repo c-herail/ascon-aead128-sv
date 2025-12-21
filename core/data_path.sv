@@ -55,7 +55,6 @@ module data_path (
     logic sel_mode_s;
 
     logic [127:0] din_s;
-    logic [127:0] key_s;
     logic [127:0] db_s;
     logic [127:0] tag_s;
 
@@ -82,15 +81,6 @@ module data_path (
         .a  (loop_s ^ end_ad),
         .b  (input_state_s),
         .s  (state_s)
-    );
-
-    data_reg #(.WIDTH(128))
-    KEY_REG (
-        .clk  (clk),
-        .rst_n(rst_n),
-        .en   (en_new_aead),
-        .d    (key),
-        .q    (key_s)
     );
 
     data_reg #(.WIDTH(1))
@@ -131,9 +121,9 @@ module data_path (
     KEY_XOR_MUX (
         .sel(sel_xor_key),
         .a  ({p_s.s2, p_s.s3,  p_s.s4}),
-        .b  ({p_s.s2, p_s.s3,  p_s.s4} ^ key_s),
-        .c  ({p_s.s2, p_s.s3,  p_s.s4} ^ {key_s, 64'b0}),
-        .d  ({p_s.s2, p_s.s3,  p_s.s4} ^ {key_s, 64'b0} ^ key_s),
+        .b  ({p_s.s2, p_s.s3,  p_s.s4} ^ key),
+        .c  ({p_s.s2, p_s.s3,  p_s.s4} ^ {key, 64'b0}),
+        .d  ({p_s.s2, p_s.s3,  p_s.s4} ^ {key, 64'b0} ^ key),
         .s  ({loop_s.s2, loop_s.s3, loop_s.s4})
     );
 

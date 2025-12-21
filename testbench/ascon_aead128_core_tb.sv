@@ -76,8 +76,6 @@ module ascon_aead128_core_tb ();
         key = {k.msb, k.lsb};
         nonce = {n.msb, n.lsb};
         @(posedge clk);
-        key = '0;
-        nonce = '0;
     endtask
 
     task associated_data;
