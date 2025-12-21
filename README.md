@@ -12,7 +12,7 @@ In 2024, the National Institute of Standards and Technology (NIST) published an 
 ## About This Project
 
 This project implements the **Ascon-AEAD128** algorithm in hardware with an **AXI4-Lite interface** using **SystemVerilog**.
-It was originally developed as part of a school project to learn hardware design and FPGA development. A year later, the project was restarted from scratch, this time based on the official NIST draft specifications. Several design and code improvements were made; in addition, decryption is implemented and both operations support any number of associated data and data blocks.
+It was originally developed as part of a school project to learn hardware design and FPGA development. A year later, the project was restarted from scratch, this time based on the official NIST draft specifications. Several design and code improvements were made. In addition, decryption is implemented and both operations support any number of associated data and data blocks.
 
 Please note that this project is provided **as-is**, without any warranty or guarantee of correctness or suitability for any specific purpose.
 
